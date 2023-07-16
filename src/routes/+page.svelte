@@ -34,6 +34,8 @@
         updateCounts(grid)
         return [grid, solved]
     }
+
+    // Function adapted from https://www.101computing.net/sudoku-generator-algorithm/
     function generateSudoku(board){
         let row = 0
         let col = 0
@@ -76,7 +78,7 @@
         numbers[chars.indexOf(currChange)]--
         return true
     }
-
+    // Function adapted from https://www.youtube.com/watch?v=G_UYXzGuqvM&t=169s&ab_channel=Computerphile
     function isValid(i, j, move, board){
         if( !chars.includes(move) ) {
             return false
