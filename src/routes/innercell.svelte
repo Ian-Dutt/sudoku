@@ -35,7 +35,12 @@ import {chars, validateGuess, isValid } from "./helpers";
         if(notes === true) return
 
         if(!validateGuess(ij[0], ij[1], value, board, solved)) value = ""
-        if(isSolved(board)) alert("You have solved Sudoku")
+        else{
+            for(const i in guesses){
+                guesses[i] = 0
+            }
+            if(isSolved(board)) alert("You have solved Sudoku")
+        }
     }}>
 
 </div>
@@ -62,7 +67,7 @@ import {chars, validateGuess, isValid } from "./helpers";
         height: 100%;
         position: relative;
         font-size: 20px;
-        transform: translate(0, -100%);
+        transform: translate(0, -90%);
 
     }
     .even{
