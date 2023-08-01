@@ -3,12 +3,13 @@ export const chars = ['1', '2', '3', '4', '5' ,'6', '7', '8', '9']
  * Validates the sudoke move
  * @param {Number} i
  * @param {Number} j
+ * @param {String} move 
  * @param {Array<Array<String>>} board 
  * @param {Array<Array<String>>} solved 
  */
-export function validateGuess(i, j, board, solved){
-    const currChange = board[i][j]
-    if(currChange !== solved[i][j] || !isValid(i, j, currChange, board)){
+export function validateGuess(i, j, move ,board, solved){
+    console.log(typeof move)
+    if(move !== solved[i][j] || !isValid(i, j, move, board)){
         board[i][j] = ''
         return false
     }

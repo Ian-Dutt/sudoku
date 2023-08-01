@@ -1,94 +1,59 @@
 <script>
-
-    export let subVal = "";
-    export let id = "c";
+    import { isSolved } from "./board";
+import {chars, validateGuess, isValid } from "./helpers";
+    const guesses = [0,0,0,0,0,0,0,0,0]
+    const cont = true
+    export let notes = false;
+    export let isOdd = false;
+    export let value = "";
+    export let board = [["s"]];
+    export let solved = [["s"]];
+    export let ij = [1,1];
     
-    
-    let value ="";
-    const chars = ['1','2','3','4','5','6','7','8','9']
-    let state = true;
-    /**
-    * Function adapted from https://www.youtube.com/watch?v=G_UYXzGuqvM&t=169s&ab_channel=Computerphile
-    * @param {String} move
-    */
-    function isValid(move){
-        return chars.includes(move) && subVal !== ""
-    }
-
-    function check(val){
-        return val === "1"
-    }
-
 </script>
-
-<div class="cell" id={`${id}`}>
-    <div class="inner" id={`${id}-1`}></div>
-    <div class="inner" id={`${id}-2`}></div>
-    <div class="inner" id={`${id}-3`}></div>
-    <div class="inner" id={`${id}-4`}></div>
-    <div class="inner" id={`${id}-5`}></div>
-    <div class="inner" id={`${id}-6`}></div>
-    <div class="inner" id={`${id}-7`}></div>
-    <div class="inner" id={`${id}-8`}></div>
-    <div class="inner" id={`${id}-9`}></div>
-    <div class="val">{subVal}</div>
-    <input id={`${id}-input`} type="text" bind:value={value} on:input={(e) => {
-        value = value.charAt(value.length -1)
-        if(isValid(value)){
-            const innerCell = document.getElementById(id + "-" + value)
-            if(!innerCell) return;
-
-            if(innerCell.innerHTML === value) innerCell.innerHTML = ""
-            else innerCell.innerHTML = value
-        }
-
-    }}
-    on:focusout={() => {
-        if(!state){
-            subVal = value
-        }
-        value = ""
-        
-        state = true
-    }}
-    on:keydown={(e) =>{
-        if(e.key === 'Enter'){
-            if(check(value)){
-                subVal = value
-                for(let i = 1; i < 10; i++){
-                    const element = document.getElementById(id+"-"+i)
-                    if(element && element.innerHTML !== "") element.innerHTML = ""
-                }
-            }
+<div class={`sudoku-cell ${isOdd ? "odd":"even"}`}>
+    <div class="inner"> {guesses[0] !== 0 ? guesses[0] : ""} </div>
+    <div class="inner"> {guesses[1] !== 0 ? guesses[1] : ""} </div>
+    <div class="inner"> {guesses[2] !== 0 ? guesses[2] : ""} </div>
+    <div class="inner"> {guesses[3] !== 0 ? guesses[3] : ""} </div>
+    <div class="inner"> {guesses[4] !== 0 ? guesses[4] : ""} </div>
+    <div class="inner"> {guesses[5] !== 0 ? guesses[5] : ""} </div>
+    <div class="inner"> {guesses[6] !== 0 ? guesses[6] : ""} </div>
+    <div class="inner"> {guesses[7] !== 0 ? guesses[7] : ""} </div>
+    <div class="inner"> {guesses[8] !== 0 ? guesses[8] : ""} </div>
+    
+    <input type="string" bind:value={value} on:input={(e) => {
+        e.preventDefault()
+        if(notes === true){
+            if(!chars.includes(value)) value = ""
+            else if(guesses[parseInt(value)-1]===0) guesses[parseInt(value)-1] = parseInt(value)
+            else guesses[parseInt(value)-1] = 0
             value = ""
-        }else if(e.key === 'Backspace'){
-                for(let i = 9; i > 0; i--){
-                    const element = document.getElementById(id+"-"+i)
-                    if(element && element.innerHTML !== ""){
-                        element.innerHTML = ""
-                        return
-                    }
-                }
-                subVal = ""
-            }
         }
-    }>
+    }} 
+    on:change={() => {
+        if(notes === true) return
+
+        if(!validateGuess(ij[0], ij[1], value, board, solved)) value = ""
+        if(isSolved(board)) alert("You have solved Sudoku")
+    }}>
 
 </div>
-
 <style>
-    .cell{
-        width: calc(75vh);
-        height: calc(75vh);
-        background: pink;
+    .sudoku-cell{
+        width: 10%;
+        height: 10%;
+        border: 2px solid black;
+        text-align: center;
+        margin: auto;
         display: flex;
         flex-wrap: wrap;
     }
     .inner{
         width: 30%;
         height: 30%;
-        margin: 1.6%;
-        background-color: lightblue;
+        margin: auto;
+        color: blue;
     }
     input{
         margin: 0;
@@ -96,21 +61,19 @@
         width: 100%;
         height: 100%;
         position: relative;
-        top: calc(-2 * 75vh);
-    }
-    .val{
-        display: flex;
-        position: relative;
-        width: 100%;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        top: calc(-75vh);
+        font-size: 20px;
+        transform: translate(0, -100%);
+
     }
     .even{
-        background-color: grey;
+        background-color: green;
     }
     .odd{
-        background-color: lightgray;
+        background-color: lightgreen;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 </style>
